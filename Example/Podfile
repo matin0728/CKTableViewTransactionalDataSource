@@ -2,10 +2,4 @@ use_frameworks!
 
 target 'CKTableViewTransactionalDataSource_Example' do
   pod 'CKTableViewTransactionalDataSource', :path => '../'
-
-  target 'CKTableViewTransactionalDataSource_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end
