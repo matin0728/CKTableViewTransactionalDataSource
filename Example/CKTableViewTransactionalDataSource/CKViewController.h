@@ -6,7 +6,7 @@
 //  Copyright (c) 2017 gaojiji@gmail.com. All rights reserved.
 //
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 @interface CKViewController : UIViewController
 
