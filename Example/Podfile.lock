@@ -1,0 +1,16 @@
+PODS:
+  - CKTableViewTransactionalDataSource (0.1.0)
+
+DEPENDENCIES:
+  - CKTableViewTransactionalDataSource (from `../`)
+
+EXTERNAL SOURCES:
+  CKTableViewTransactionalDataSource:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CKTableViewTransactionalDataSource: 5f8445ea059d7a6bff8d4b38df9c799addbe1bd0
+
+PODFILE CHECKSUM: 989631c175361fe54acd6ac93fc33180d0a88c4c
+
+COCOAPODS: 1.2.1
