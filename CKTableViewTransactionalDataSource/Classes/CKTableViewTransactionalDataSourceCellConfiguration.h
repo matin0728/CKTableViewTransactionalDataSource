@@ -45,6 +45,7 @@ typedef void(*CKTableViewCellConfigurationFunction)(UITableViewCell *cell, NSInd
  property. Mutate the copy and pass it in an update operation to override the default.
  */
 @interface CKTableViewTransactionalDataSourceCellConfiguration : NSObject
+
 @property (nonatomic, assign) UITableViewRowAnimation animationRowInsert;
 @property (nonatomic, assign) UITableViewRowAnimation animationRowDelete;
 @property (nonatomic, assign) UITableViewRowAnimation animationSectionInsert;
@@ -56,6 +57,8 @@ typedef void(*CKTableViewCellConfigurationFunction)(UITableViewCell *cell, NSInd
 + (instancetype)noAnimationConfig;
 
 @end
+
+typedef CKTableViewTransactionalDataSourceCellConfiguration CKTableViewCellConfiguration;
 
 /**
  The cell configuration object can be set as a constant value when the data source

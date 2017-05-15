@@ -25,8 +25,8 @@
 
 #import <UIKit/UIKit.h>
 #import <ComponentKit/ComponentKit.h>
-@class CKTableViewTransactionalDataSourceCellConfiguration;
-@protocol CKTableViewSupplementaryDataSource;
+#import "CKTableViewTransactionalDataSourceCellConfiguration.h"
+#import "CKTableViewSupplementaryDataSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTableView:(UITableView *)tableView
           supplementaryDataSource:(NSObject <CKTableViewSupplementaryDataSource> * _Nullable)supplementaryDataSource
                     configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration
-         defaultCellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration * _Nullable)cellConfiguration NS_DESIGNATED_INITIALIZER;
+         defaultCellConfiguration:(CKTableViewCellConfiguration * _Nullable)cellConfiguration NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
-     cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration * _Nullable)cellConfiguration;
+     cellConfiguration:(CKTableViewCellConfiguration * _Nullable)cellConfiguration;
 
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode;
@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
-          cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration * _Nullable)cellConfiguration;
+          cellConfiguration:(CKTableViewCellConfiguration * _Nullable)cellConfiguration;
 
 /**
  UITableView instance passed to the initializer.
@@ -104,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
  *	The default cell configuration specified in the initializer.
  *	@note Copy is always returned. Use accessor to mutate the copies and pass in updates.
  */
-@property (readonly, nonatomic, copy) CKTableViewTransactionalDataSourceCellConfiguration *cellConfiguration;
+@property (readonly, nonatomic, copy) CKTableViewCellConfiguration *cellConfiguration;
 
 /**
  Supplementary views are not handled with components; the datasource will forward any call to

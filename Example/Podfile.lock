@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CKTableViewTransactionalDataSource: c2cb38976815158592e2d02e1e2948aef20cca0e
+  CKTableViewTransactionalDataSource: 50d1d1bb6764312f1a9d8e9acbb6f7984b32c128
   ComponentKit: beef88630f344efb8344fe40fc6fc7c1732b68c8
 
 PODFILE CHECKSUM: 989631c175361fe54acd6ac93fc33180d0a88c4c
