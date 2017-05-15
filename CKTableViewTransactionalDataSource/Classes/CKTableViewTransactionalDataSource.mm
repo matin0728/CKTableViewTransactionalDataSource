@@ -188,6 +188,11 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
                         : nil)];
 }
 
+- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset mode:(CKUpdateMode)mode
+{
+    [self applyChangeset:changeset mode:mode cellConfiguration:nil];
+}
+
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
           cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration *)cellConfiguration

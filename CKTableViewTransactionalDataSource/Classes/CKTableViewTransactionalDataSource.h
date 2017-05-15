@@ -63,6 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
                   mode:(CKUpdateMode)mode
      cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration * _Nullable)cellConfiguration;
 
+- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+                  mode:(CKUpdateMode)mode;
+
 /**
  @return The model associated with a certain index path in the view.
 
