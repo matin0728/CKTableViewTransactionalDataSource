@@ -46,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
  *	@param cellConfiguration Initial cell configuration instance, or nil.
  */
 - (instancetype)initWithTableView:(UITableView *)tableView
-          supplementaryDataSource:(NSObject <CKTableViewSupplementaryDataSource> * _Nullable)supplementaryDataSource
+          supplementaryDataSource:(nullable NSObject <CKTableViewSupplementaryDataSource> *)supplementaryDataSource
                     configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration
-         defaultCellConfiguration:(CKTableViewCellConfiguration * _Nullable)cellConfiguration NS_DESIGNATED_INITIALIZER;
+         defaultCellConfiguration:(nullable CKTableViewCellConfiguration *)cellConfiguration NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
-     cellConfiguration:(CKTableViewCellConfiguration * _Nullable)cellConfiguration;
+     cellConfiguration:(nullable CKTableViewCellConfiguration *)cellConfiguration;
 
 - (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode;
@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
-          cellConfiguration:(CKTableViewCellConfiguration * _Nullable)cellConfiguration;
+          cellConfiguration:(nullable CKTableViewCellConfiguration *)cellConfiguration;
 
 /**
  UITableView instance passed to the initializer.
