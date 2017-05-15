@@ -53,4 +53,15 @@ NSString *const CKTableViewTransactionalDataSourceCellConfigurationKey
   return copy;
 }
 
++ (instancetype)noAnimationConfig
+{
+  CKTableViewTransactionalDataSourceCellConfiguration *config = [[self alloc] init];
+  config.animationsDisabled = YES;
+  config.animationRowInsert =
+  config.animationRowDelete =
+  config.animationSectionInsert =
+  config.animationSectionDelete = UITableViewRowAnimationNone;
+  return config;
+}
+
 @end

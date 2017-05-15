@@ -52,6 +52,9 @@ typedef void(*CKTableViewCellConfigurationFunction)(UITableViewCell *cell, NSInd
 /** If `YES`, will perform updates with `+[UIView performWithoutAnimation:]` */
 @property (nonatomic, assign) BOOL animationsDisabled;
 @property (nonatomic, assign) CKTableViewCellConfigurationFunction cellConfigurationFunction;
+
++ (instancetype)noAnimationConfig;
+
 @end
 
 /**
