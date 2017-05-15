@@ -1,24 +1,10 @@
-#
-# Be sure to run `pod lib lint CKTableViewTransactionalDataSource.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'CKTableViewTransactionalDataSource'
   s.version          = '0.1'
   s.summary          = 'Tableview datasource for CompoenentKit'
 
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+ A tableview datasource for ComponentKit. ComponentKit only provide datasource for collection view. This is an clone of `CKCollectionViewTransactionalDataSource` with a slightly modification for cell updating animation.
                        DESC
 
   s.homepage         = 'https://github.com/leavez/CKTableViewTransactionalDataSource'
@@ -29,5 +15,6 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
   s.public_header_files = 'CKTableViewTransactionalDataSource/*.h'
   s.source_files = 'CKTableViewTransactionalDataSource/**/*'
+  s.library = 'c++'
   s.dependency "ComponentKit", '~> 0.2'
 end
