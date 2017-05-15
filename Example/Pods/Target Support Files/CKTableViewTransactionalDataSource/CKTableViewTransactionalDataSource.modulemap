@@ -1,6 +1,0 @@
-framework module CKTableViewTransactionalDataSource {
-  umbrella header "CKTableViewTransactionalDataSource-umbrella.h"
-
-  export *
-  module * { export * }
-}

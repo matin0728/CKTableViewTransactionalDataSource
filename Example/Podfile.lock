@@ -1,5 +1,7 @@
 PODS:
-  - CKTableViewTransactionalDataSource (0.1.0)
+  - CKTableViewTransactionalDataSource (0.1):
+    - ComponentKit (~> 0.2)
+  - ComponentKit (0.15.1)
 
 DEPENDENCIES:
   - CKTableViewTransactionalDataSource (from `../`)
@@ -9,7 +11,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CKTableViewTransactionalDataSource: 5f8445ea059d7a6bff8d4b38df9c799addbe1bd0
+  CKTableViewTransactionalDataSource: c2cb38976815158592e2d02e1e2948aef20cca0e
+  ComponentKit: beef88630f344efb8344fe40fc6fc7c1732b68c8
 
 PODFILE CHECKSUM: 989631c175361fe54acd6ac93fc33180d0a88c4c
 
