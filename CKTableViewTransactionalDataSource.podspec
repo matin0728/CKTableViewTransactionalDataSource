@@ -27,7 +27,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/leavez/CKTableViewTransactionalDataSource.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-
-  s.source_files = 'CKTableViewTransactionalDataSource/Classes/**/*'
+  s.public_header_files = 'CKTableViewTransactionalDataSource/*.h'
+  s.source_files = 'CKTableViewTransactionalDataSource/**/*'
   s.dependency "ComponentKit", '~> 0.2'
 end
