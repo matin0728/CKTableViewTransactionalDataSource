@@ -23,8 +23,8 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#import "CKTransactionalDataSourceInterface.h"
-
+#import <UIKit/UIKit.h>
+#import <ComponentKit/ComponentKit.h>
 @class CKTableViewTransactionalDataSourceCellConfiguration;
 @protocol CKTableViewSupplementaryDataSource;
 
@@ -35,16 +35,15 @@ NS_ASSUME_NONNULL_BEGIN
  CKTransactionalDataSourceInterface), with some additional features, related to
  utilising UITableViewCell's native features.
  */
-@interface CKTableViewTransactionalDataSource : NSObject <CKTransactionalDataSourceInterface>
+@interface CKTableViewTransactionalDataSource : NSObject
 
 /**
  *	Designated initializer.
  *
- *	@param tableView								The tableView is held strongly and its datasource property will be set to the receiver.
- *	@param supplementaryDataSource	UITableViewDataSource subset methods from CKTableViewSupplementaryDataSource will be
- forwarded to this object. Weak reference.
- *	@param configuration						@see CKTransactionalComponentDataSourceConfiguration.
- *	@param cellConfiguration				Initial cell configuration instance, or nil.
+ *	@param tableView The tableView is held strongly and its datasource property will be set to the receiver.
+ *	@param supplementaryDataSource	UITableViewDataSource subset methods from CKTableViewSupplementaryDataSource will be forwarded to this object. Weak reference.
+ *	@param configuration see CKTransactionalComponentDataSourceConfiguration.
+ *	@param cellConfiguration Initial cell configuration instance, or nil.
  */
 - (instancetype)initWithTableView:(UITableView *)tableView
           supplementaryDataSource:(NSObject <CKTableViewSupplementaryDataSource> * _Nullable)supplementaryDataSource
@@ -65,6 +64,24 @@ NS_ASSUME_NONNULL_BEGIN
      cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration * _Nullable)cellConfiguration;
 
 /**
+ @return The model associated with a certain index path in the view.
+
+ As stated above components are generated asynchronously and on a background thread. This means that a changeset is enqueued
+ and applied asynchronously when the corresponding component tree is generated. For this reason always use this method when you
+ want to retrieve the model associated to a certain index path in the view (e.g in didSelectRowAtIndexPath: )
+ */
+- (id<NSObject>)modelForItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ @return The layout size of the component tree at a certain indexPath.
+ */
+- (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/** @see `CKTransactionalComponentDataSource` */
+- (void)reloadWithMode:(CKUpdateMode)mode
+              userInfo:(NSDictionary *)userInfo;
+
+/**
  Convenience method for passing a CKTableViewTransactionalDataSourceCellConfiguration
  object via CKTransactionalDataSourceInterface's userInfo method (and dictionary) when
  updating the data source's configuration. @see CKTransactionalComponentDataSource.
@@ -79,7 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
  UITableView instance passed to the initializer.
  */
 @property (readonly, nonatomic, strong) UITableView *tableView;
-@property (readonly, nonatomic, strong) UITableView *view;
 
 /**
  *	The default cell configuration specified in the initializer.
@@ -87,7 +103,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (readonly, nonatomic, copy) CKTableViewTransactionalDataSourceCellConfiguration *cellConfiguration;
 
-- (CKTransactionalComponentDataSourceChangeset*)removeAllChangeset;
+/**
+ Supplementary views are not handled with components; the datasource will forward any call to
+ `collectionView:viewForSupplementaryElementOfKind:atIndexPath` to this object.
+ */
+@property (readonly, nonatomic, weak) id<CKTableViewSupplementaryDataSource> supplementaryDataSource;
 
 @end
 
