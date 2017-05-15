@@ -71,6 +71,10 @@ CKTransactionalComponentDataSourceListener
     _attachController = [[CKComponentDataSourceAttachController alloc] init];
     _supplementaryDataSource = supplementaryDataSource;
     _cellConfiguration = cellConfiguration;
+
+    // tableview have one section initially, while ck datasoure have no. This will led to crash
+    // at some circumstances.
+    [_tableView reloadData];
   }
   return self;
 }
