@@ -28,7 +28,7 @@
 #import "CKTableViewTransactionalDataSourceCellConfiguration.h"
 #import "CKTableViewSupplementaryDataSource.h"
 
-NS_ASSUME_NONNULL_BEGIN
+
 
 /**
  Largely clones the interface of CKCollectionViewTransactionalDataSource (via
@@ -45,12 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
  *	@param configuration see CKTransactionalComponentDataSourceConfiguration.
  *	@param cellConfiguration Initial cell configuration instance, or nil.
  */
-- (instancetype)initWithTableView:(UITableView *)tableView
+- (nonnull instancetype)initWithTableView:(nonnull UITableView *)tableView
           supplementaryDataSource:(nullable NSObject <CKTableViewSupplementaryDataSource> *)supplementaryDataSource
-                    configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+                    configuration:(nonnull CKTransactionalComponentDataSourceConfiguration *)configuration
          defaultCellConfiguration:(nullable CKTableViewCellConfiguration *)cellConfiguration NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)init NS_UNAVAILABLE;
+- (nonnull instancetype)init NS_UNAVAILABLE;
 
 /**
  Convenience method for passing a CKTableViewTransactionalDataSourceCellConfiguration
@@ -59,12 +59,16 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param cellConfiguration	A cell configuration object to use during this update.
  */
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(nonnull CKTransactionalComponentDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
      cellConfiguration:(nullable CKTableViewCellConfiguration *)cellConfiguration;
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(nonnull CKTransactionalComponentDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode;
+
+- (void)applyChangeset:(nonnull CKTransactionalComponentDataSourceChangeset *)changeset
+                  mode:(CKUpdateMode)mode
+              userInfo:(nullable NSDictionary *)userInfo;
 
 /**
  @return The model associated with a certain index path in the view.
@@ -73,16 +77,16 @@ NS_ASSUME_NONNULL_BEGIN
  and applied asynchronously when the corresponding component tree is generated. For this reason always use this method when you
  want to retrieve the model associated to a certain index path in the view (e.g in didSelectRowAtIndexPath: )
  */
-- (id<NSObject>)modelForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (nullable id<NSObject>)modelForItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 /**
  @return The layout size of the component tree at a certain indexPath.
  */
-- (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (CGSize)sizeForItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 /** @see `CKTransactionalComponentDataSource` */
 - (void)reloadWithMode:(CKUpdateMode)mode
-              userInfo:(NSDictionary *)userInfo;
+              userInfo:(nullable NSDictionary *)userInfo;
 
 /**
  Convenience method for passing a CKTableViewTransactionalDataSourceCellConfiguration
@@ -91,27 +95,27 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param cellConfiguration	A cell configuration object to use during this update.
  */
-- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+- (void)updateConfiguration:(nonnull CKTransactionalComponentDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
           cellConfiguration:(nullable CKTableViewCellConfiguration *)cellConfiguration;
 
 /**
  UITableView instance passed to the initializer.
  */
-@property (readonly, nonatomic, strong) UITableView *tableView;
+@property (readonly, nonatomic, strong, nonnull) UITableView *tableView;
 
 /**
  *	The default cell configuration specified in the initializer.
  *	@note Copy is always returned. Use accessor to mutate the copies and pass in updates.
  */
-@property (readonly, nonatomic, copy) CKTableViewCellConfiguration *cellConfiguration;
+@property (readonly, nonatomic, copy, nonnull) CKTableViewCellConfiguration *cellConfiguration;
 
 /**
  Supplementary views are not handled with components; the datasource will forward any call to
  `collectionView:viewForSupplementaryElementOfKind:atIndexPath` to this object.
  */
-@property (readonly, nonatomic, weak) id<CKTableViewSupplementaryDataSource> supplementaryDataSource;
+@property (readonly, nonatomic, weak, nullable) id<CKTableViewSupplementaryDataSource> supplementaryDataSource;
 
 @end
 
-NS_ASSUME_NONNULL_END
+
