@@ -32,7 +32,7 @@
 #import <ComponentKit/CKTransactionalComponentDataSourceState.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
-#import <ComponentKit/CKComponentDataSourceInputItem.h>
+//#import <ComponentKit/CKComponentDataSourceInputItem.h>
 #import <ComponentKit/CKTransactionalComponentDataSourceListener.h>
 #import <ComponentKit/CKComponentRootView.h>
 
