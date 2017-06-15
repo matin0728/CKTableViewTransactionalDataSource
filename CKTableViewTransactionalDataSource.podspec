@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CKTableViewTransactionalDataSource'
-  s.version          = '0.1'
+  s.version          = '0.2.2'
   s.summary          = 'Tableview datasource for CompoenentKit'
 
   s.description      = <<-DESC
