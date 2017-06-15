@@ -44,10 +44,12 @@ CKTransactionalComponentDataSourceListener
 >
 {
   CKTransactionalComponentDataSource *_componentDataSource;
+  __weak NSObject <CKTableViewSupplementaryDataSource> *_supplementaryDataSource;
   CKTransactionalComponentDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
   CKTableViewTransactionalDataSourceCellConfiguration *_defaultCellConfiguration;
   CKTableViewTransactionalDataSourceCellConfiguration *_cellConfiguration;
+  NSMapTable<UITableViewCell *, CKTransactionalComponentDataSourceItem *> *_cellToItemMap;
 }
 @end
 
@@ -71,6 +73,7 @@ CKTransactionalComponentDataSourceListener
     _attachController = [[CKComponentDataSourceAttachController alloc] init];
     _supplementaryDataSource = supplementaryDataSource;
     _cellConfiguration = cellConfiguration;
+    _cellToItemMap = [NSMapTable weakToStrongObjectsMapTable];
 
     // tableview have one section initially, while ck datasoure have no. This will led to crash
     // at some circumstances.
@@ -94,22 +97,26 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
                                     UITableView *tableView,
                                     CKTableViewTransactionalDataSourceCellConfiguration *cellConfig,
                                     CKTransactionalComponentDataSourceState *currentState,
-                                    CKComponentDataSourceAttachController *attachController)
+                                    CKComponentDataSourceAttachController *attachController,
+                                    NSMapTable<UITableViewCell *, CKTransactionalComponentDataSourceItem *> *cellToItemMap)
 {
   [changes.updatedIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull indexPath, BOOL * _Nonnull stop) {
     if (CKTableViewDataSourceCell *cell = [tableView cellForRowAtIndexPath:indexPath]) {
-      _attachToCell(cell, indexPath, currentState, cellConfig, attachController);
+      _attachToCell(cell, indexPath, currentState, cellConfig, attachController, cellToItemMap);
     }
   }];
-  UITableViewRowAnimation animation = cellConfig ? cellConfig.animationRowDelete : kDefaultAnimation;
-  [tableView deleteRowsAtIndexPaths:[changes.removedIndexPaths allObjects] withRowAnimation:animation];
-  [tableView deleteSections:changes.removedSections withRowAnimation:animation];
+  [tableView deleteRowsAtIndexPaths:[changes.removedIndexPaths allObjects]
+                   withRowAnimation:cellConfig ? cellConfig.animationRowDelete : kDefaultAnimation];
+  [tableView deleteSections:changes.removedSections
+           withRowAnimation:cellConfig ? cellConfig.animationSectionDelete : kDefaultAnimation];
   for (NSIndexPath *from in changes.movedIndexPaths) {
     NSIndexPath *to = changes.movedIndexPaths[from];
     [tableView moveRowAtIndexPath:from toIndexPath:to];
   }
-  [tableView insertSections:changes.insertedSections withRowAnimation:animation];
-  [tableView insertRowsAtIndexPaths:[changes.insertedIndexPaths allObjects] withRowAnimation:animation];
+  [tableView insertSections:changes.insertedSections
+           withRowAnimation:cellConfig ? cellConfig.animationSectionInsert : kDefaultAnimation];
+  [tableView insertRowsAtIndexPaths:[changes.insertedIndexPaths allObjects]
+                   withRowAnimation:cellConfig ? cellConfig.animationRowInsert : kDefaultAnimation];
 }
 
 #pragma mark - CKTransactionalComponentDataSourceListener
@@ -123,11 +130,12 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
 
   dispatch_block_t block = ^{
     [_tableView beginUpdates];
+    applyChangesToTableView(changes, _tableView, cellConfig, _currentState, _attachController, _cellToItemMap);
+
     // Detach all the component layouts for items being deleted
     [self _detachComponentLayoutForRemovedItemsAtIndexPaths:[changes removedIndexPaths]
                                                     inState:previousState];
     _currentState = [_componentDataSource state];
-    applyChangesToTableView(changes, _tableView, cellConfig, _currentState, _attachController);
     [_tableView endUpdates];
   };
 
@@ -147,6 +155,11 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
   }
 }
 
+#pragma mark - CKTransactionalDataSourceInterface
+
+- (UIView *)view {
+  return _tableView;
+}
 
 #pragma mark - State
 
@@ -188,11 +201,6 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
                         : nil)];
 }
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset mode:(CKUpdateMode)mode
-{
-    [self applyChangeset:changeset mode:mode cellConfiguration:nil];
-}
-
 - (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
           cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration *)cellConfiguration
@@ -208,6 +216,18 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
   return _cellConfiguration.copy;
 }
 
+#pragma mark - Appearance announcements
+
+- (void)announceWillDisplayCell:(UITableViewCell *)cell
+{
+  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeWillAppear];
+}
+
+- (void)announceDidEndDisplayingCell:(UITableViewCell *)cell
+{
+  [[_cellToItemMap objectForKey:cell].scopeRoot announceEventToControllers:CKComponentAnnouncedEventTreeDidDisappear];
+}
+
 #pragma mark - UITableViewDataSource
 
 static NSString *const kReuseIdentifier = @"com.component_kit.table_view_data_source.cell";
@@ -216,10 +236,11 @@ static void _attachToCell(CKTableViewDataSourceCell *cell,
                           NSIndexPath *indexPath,
                           CKTransactionalComponentDataSourceState *currentState,
                           CKTableViewTransactionalDataSourceCellConfiguration *configuration,
-                          CKComponentDataSourceAttachController *attachController)
+                          CKComponentDataSourceAttachController *attachController,
+                          NSMapTable<UITableViewCell *, CKTransactionalComponentDataSourceItem *> *cellToItemMap)
 {
   CKTransactionalComponentDataSourceItem *item = [currentState objectAtIndexPath:indexPath];
-  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier toView:cell.rootView];
+  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView];
   if (configuration.cellConfigurationFunction) {
     configuration.cellConfigurationFunction(cell, indexPath, item.model);
   }
@@ -228,7 +249,7 @@ static void _attachToCell(CKTableViewDataSourceCell *cell,
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   CKTableViewDataSourceCell *cell = [_tableView dequeueReusableCellWithIdentifier:kReuseIdentifier forIndexPath:indexPath];
-  _attachToCell(cell, indexPath, _currentState, _cellConfiguration, _attachController);
+  _attachToCell(cell, indexPath, _currentState, _cellConfiguration, _attachController, _cellToItemMap);
   return cell;
 }
 
@@ -300,6 +321,5 @@ static void _attachToCell(CKTableViewDataSourceCell *cell,
     return [_supplementaryDataSource tableView:tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
   }
 }
-
 
 @end
