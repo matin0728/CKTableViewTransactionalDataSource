@@ -101,15 +101,15 @@ static void applyChangesToTableView(CKTransactionalComponentDataSourceAppliedCha
       _attachToCell(cell, indexPath, currentState, cellConfig, attachController);
     }
   }];
-  UITableViewRowAnimation animation = cellConfig ? cellConfig.animationRowDelete : kDefaultAnimation;
-  [tableView deleteRowsAtIndexPaths:[changes.removedIndexPaths allObjects] withRowAnimation:animation];
-  [tableView deleteSections:changes.removedSections withRowAnimation:animation];
+
+  [tableView deleteRowsAtIndexPaths:[changes.removedIndexPaths allObjects] withRowAnimation:cellConfig ? cellConfig.animationRowDelete : kDefaultAnimation];
+  [tableView deleteSections:changes.removedSections withRowAnimation:cellConfig ? cellConfig.animationSectionDelete : kDefaultAnimation];
   for (NSIndexPath *from in changes.movedIndexPaths) {
     NSIndexPath *to = changes.movedIndexPaths[from];
     [tableView moveRowAtIndexPath:from toIndexPath:to];
   }
-  [tableView insertSections:changes.insertedSections withRowAnimation:animation];
-  [tableView insertRowsAtIndexPaths:[changes.insertedIndexPaths allObjects] withRowAnimation:animation];
+  [tableView insertSections:changes.insertedSections withRowAnimation:cellConfig ? cellConfig.animationSectionInsert : kDefaultAnimation];
+  [tableView insertRowsAtIndexPaths:[changes.insertedIndexPaths allObjects] withRowAnimation:cellConfig ? cellConfig.animationRowInsert : kDefaultAnimation];
 }
 
 #pragma mark - CKTransactionalComponentDataSourceListener
