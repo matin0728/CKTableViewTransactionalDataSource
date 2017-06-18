@@ -2,4 +2,5 @@ use_frameworks!
 
 target 'CKTableViewTransactionalDataSource_Example' do
   pod 'CKTableViewTransactionalDataSource', :path => '../'
+  pod 'ComponentKit', :git => "https://github.com/leavez/componentkit.git", :branch => "pod"
 end

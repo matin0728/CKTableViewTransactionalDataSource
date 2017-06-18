@@ -1,19 +1,28 @@
 PODS:
-  - CKTableViewTransactionalDataSource (0.1):
-    - ComponentKit (~> 0.2)
-  - ComponentKit (0.15.1)
+  - CKTableViewTransactionalDataSource (0.2.1):
+    - ComponentKit (~> 0.20)
+  - ComponentKit (0.20)
 
 DEPENDENCIES:
   - CKTableViewTransactionalDataSource (from `../`)
+  - ComponentKit (from `https://github.com/leavez/componentkit.git`, branch `pod`)
 
 EXTERNAL SOURCES:
   CKTableViewTransactionalDataSource:
     :path: "../"
+  ComponentKit:
+    :branch: pod
+    :git: https://github.com/leavez/componentkit.git
+
+CHECKOUT OPTIONS:
+  ComponentKit:
+    :commit: 3c33e17106e296e0fdd0b191a820a744b78a5e4f
+    :git: https://github.com/leavez/componentkit.git
 
 SPEC CHECKSUMS:
-  CKTableViewTransactionalDataSource: 9f3da988ea8a9d00c68757f95a960e0dee6cf44d
-  ComponentKit: beef88630f344efb8344fe40fc6fc7c1732b68c8
+  CKTableViewTransactionalDataSource: 8776142a890e710e3626f47ceefb6d719139368b
+  ComponentKit: 54a9e19e4072c4a11dae762e1846cc1e7496cf48
 
-PODFILE CHECKSUM: 7f04a8e54cb9511ecfa5006bdff8edc3c4fa8b55
+PODFILE CHECKSUM: d6b4c89d265b03122a03db3934fe47e45d053f50
 
 COCOAPODS: 1.2.1
