@@ -20,7 +20,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/leavez/componentkit.git
 
 SPEC CHECKSUMS:
-  CKTableViewTransactionalDataSource: 8776142a890e710e3626f47ceefb6d719139368b
+  CKTableViewTransactionalDataSource: a7ea39dd8a9630a64f1352e5b09f46078434d0ec
   ComponentKit: 54a9e19e4072c4a11dae762e1846cc1e7496cf48
 
 PODFILE CHECKSUM: d6b4c89d265b03122a03db3934fe47e45d053f50

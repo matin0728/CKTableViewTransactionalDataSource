@@ -14,7 +14,8 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
   s.public_header_files = 'CKTableViewTransactionalDataSource/*.h'
-  s.source_files = 'CKTableViewTransactionalDataSource/**/*'
+  s.source_files = 'CKTableViewTransactionalDataSource/**/*.{h,m,mm,swift,c}'
   s.library = 'c++'
+  s.pod_target_xcconfig = { 'CLANG_WARN_DOCUMENTATION_COMMENTS' => 'NO' }
   s.dependency "ComponentKit", '~> 0.20'
 end
