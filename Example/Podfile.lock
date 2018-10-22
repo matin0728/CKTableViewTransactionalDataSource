@@ -1,28 +1,28 @@
 PODS:
   - CKTableViewTransactionalDataSource (0.2.1):
-    - ComponentKit (~> 0.20)
-  - ComponentKit (0.20)
+    - ComponentKit (~> 0.23)
+  - ComponentKit (0.23):
+    - Yoga (~> 1.6)
+  - Yoga (1.9.0)
 
 DEPENDENCIES:
   - CKTableViewTransactionalDataSource (from `../`)
-  - ComponentKit (from `https://github.com/leavez/componentkit.git`, branch `pod`)
+  - ComponentKit (= 0.23)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - ComponentKit
+    - Yoga
 
 EXTERNAL SOURCES:
   CKTableViewTransactionalDataSource:
     :path: "../"
-  ComponentKit:
-    :branch: pod
-    :git: https://github.com/leavez/componentkit.git
-
-CHECKOUT OPTIONS:
-  ComponentKit:
-    :commit: 3c33e17106e296e0fdd0b191a820a744b78a5e4f
-    :git: https://github.com/leavez/componentkit.git
 
 SPEC CHECKSUMS:
-  CKTableViewTransactionalDataSource: a7ea39dd8a9630a64f1352e5b09f46078434d0ec
-  ComponentKit: 54a9e19e4072c4a11dae762e1846cc1e7496cf48
+  CKTableViewTransactionalDataSource: 0db8127b3bf53f0f26159e2379782603aae974bc
+  ComponentKit: bf8b4c4e7448bd15b3a8e5a71174ea7aa6cea98d
+  Yoga: aaae8abea68951f60bee05f6277d3eed90bb91bb
 
-PODFILE CHECKSUM: d6b4c89d265b03122a03db3934fe47e45d053f50
+PODFILE CHECKSUM: 1ac54362c022340e241261797998402cace5a05d
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.5.3

@@ -24,8 +24,8 @@
     self.tableView.frame = self.view.bounds;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 
-    CKTransactionalComponentDataSourceConfiguration *config =
-    [[CKTransactionalComponentDataSourceConfiguration alloc]
+    CKDataSourceConfiguration *config =
+    [[CKDataSourceConfiguration alloc]
      initWithComponentProvider:self.class context:nil sizeRange:CKSizeRange(CGSizeMake(self.view.bounds.size.width, 0), CGSizeMake(self.view.bounds.size.width, INFINITY))];
     self.tableView.delegate = self;
 
@@ -39,7 +39,7 @@
 
 
     // add data
-    CKTransactionalComponentDataSourceChangesetBuilder *changeset = [CKTransactionalComponentDataSourceChangesetBuilder new];
+    CKDataSourceChangesetBuilder *changeset = [CKDataSourceChangesetBuilder new];
     [changeset withInsertedSections:[NSIndexSet indexSetWithIndex:0]];
     NSMutableDictionary *inserts = [NSMutableDictionary dictionary];
     for (NSInteger i = 0; i < 100; i++) {
