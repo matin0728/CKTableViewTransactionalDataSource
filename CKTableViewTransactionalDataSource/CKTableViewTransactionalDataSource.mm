@@ -27,25 +27,25 @@
 #import "CKTableViewDataSourceCell.h"
 #import "CKTableViewSupplementaryDataSource.h"
 #import "CKTableViewTransactionalDataSourceCellConfiguration.h"
-#import <ComponentKit/CKTransactionalComponentDataSource.h>
+#import <ComponentKit/CKDataSource.h>
 #import <ComponentKit/CKComponentDataSourceAttachController.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceState.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceAppliedChanges.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceItem.h>
-#import <ComponentKit/CKTransactionalComponentDataSourceListener.h>
+#import <ComponentKit/CKDataSourceState.h>
+#import <ComponentKit/CKDataSourceAppliedChanges.h>
+#import <ComponentKit/CKDataSourceItem.h>
+#import <ComponentKit/CKDataSourceListener.h>
 #import <ComponentKit/CKComponentRootView.h>
 
 static const UITableViewRowAnimation kDefaultAnimation = UITableViewRowAnimationFade;
 
 @interface CKTableViewTransactionalDataSource () <
 UITableViewDataSource,
-CKTransactionalComponentDataSourceListener
+CKDataSourceListener
 >
 {
-  CKTransactionalComponentDataSource *_componentDataSource;
-  CKTransactionalComponentDataSourceState *_currentState;
+  CKDataSource *_componentDataSource;
+  CKDataSourceState *_currentState;
   CKComponentDataSourceAttachController *_attachController;
-  NSMapTable<UITableViewCell *, CKTransactionalComponentDataSourceItem *> *_cellToItemMap;
+  NSMapTable<UITableViewCell *, CKDataSourceItem *> *_cellToItemMap;
   CKTableViewTransactionalDataSourceCellConfiguration *_defaultCellConfiguration;
   CKTableViewTransactionalDataSourceCellConfiguration *_cellConfiguration;
 }
@@ -56,12 +56,12 @@ CKTransactionalComponentDataSourceListener
 
 - (instancetype)initWithTableView:(UITableView *)tableView
           supplementaryDataSource:(NSObject <CKTableViewSupplementaryDataSource> * _Nullable)supplementaryDataSource
-                    configuration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+                    configuration:(CKDataSourceConfiguration *)configuration
          defaultCellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration * _Nullable)cellConfiguration
 {
   self = [super init];
   if (self) {
-    _componentDataSource = [[CKTransactionalComponentDataSource alloc] initWithConfiguration:configuration];
+    _componentDataSource = [[CKDataSource alloc] initWithConfiguration:configuration];
     [_componentDataSource addListener:self];
 
     _tableView = tableView;
@@ -82,7 +82,7 @@ CKTransactionalComponentDataSourceListener
 
 #pragma mark - Changeset application
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
               userInfo:(NSDictionary *)userInfo
 {
@@ -94,9 +94,9 @@ CKTransactionalComponentDataSourceListener
 static void applyChangesToTableView(
                                     UITableView *tableView,
                                     CKComponentDataSourceAttachController *attachController,
-                                    NSMapTable<UITableViewCell *, CKTransactionalComponentDataSourceItem *> *cellToItemMap,
-                                    CKTransactionalComponentDataSourceState *currentState,
-                                    CKTransactionalComponentDataSourceAppliedChanges *changes,
+                                    NSMapTable<UITableViewCell *, CKDataSourceItem *> *cellToItemMap,
+                                    CKDataSourceState *currentState,
+                                    CKDataSourceAppliedChanges *changes,
                                     CKTableViewTransactionalDataSourceCellConfiguration *cellConfig
                                     )
 {
@@ -117,24 +117,26 @@ static void applyChangesToTableView(
 
 #pragma mark - CKTransactionalComponentDataSourceListener
 
-- (void)transactionalComponentDataSource:(CKTransactionalComponentDataSource *)dataSource
-                  didModifyPreviousState:(CKTransactionalComponentDataSourceState *)previousState
-                       byApplyingChanges:(CKTransactionalComponentDataSourceAppliedChanges *)changes
+- (void)componentDataSource:(CKDataSource *)dataSource
+     didModifyPreviousState:(CKDataSourceState *)previousState
+          byApplyingChanges:(CKDataSourceAppliedChanges *)changes;
 {
   CKTableViewTransactionalDataSourceCellConfiguration *cellConfig =
   changes.userInfo[CKTableViewTransactionalDataSourceCellConfigurationKey] ?: _cellConfiguration;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
   dispatch_block_t block = ^{
     [_tableView beginUpdates];
     // Detach all the component layouts for items being deleted
     [self _detachComponentLayoutForRemovedItemsAtIndexPaths:[changes removedIndexPaths]
                                                     inState:previousState];
-    CKTransactionalComponentDataSourceState *state = [_componentDataSource state];
+    CKDataSourceState *state = [_componentDataSource state];
     applyChangesToTableView(_tableView, _attachController, _cellToItemMap, state, changes, cellConfig);
     _currentState = [_componentDataSource state];
     [_tableView endUpdates];
   };
-
+#pragma clang diagnostic pop
   if (cellConfig.animationsDisabled) {
     [UIView performWithoutAnimation:block];
   } else {
@@ -143,7 +145,7 @@ static void applyChangesToTableView(
 }
 
 - (void)_detachComponentLayoutForRemovedItemsAtIndexPaths:(NSSet *)removedIndexPaths
-                                                  inState:(CKTransactionalComponentDataSourceState *)state
+                                                  inState:(CKDataSourceState *)state
 {
   for (NSIndexPath *indexPath in removedIndexPaths) {
     CKComponentScopeRootIdentifier identifier = [[[state objectAtIndexPath:indexPath] scopeRoot] globalIdentifier];
@@ -172,7 +174,7 @@ static void applyChangesToTableView(
   [_componentDataSource reloadWithMode:mode userInfo:userInfo];
 }
 
-- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+- (void)updateConfiguration:(CKDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
                    userInfo:(NSDictionary *)userInfo
 {
@@ -181,7 +183,7 @@ static void applyChangesToTableView(
 
 #pragma mark - Cell configuration update convenience methods
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset
                   mode:(CKUpdateMode)mode
      cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration *)cellConfiguration
 {
@@ -192,12 +194,12 @@ static void applyChangesToTableView(
                         : nil)];
 }
 
-- (void)applyChangeset:(CKTransactionalComponentDataSourceChangeset *)changeset mode:(CKUpdateMode)mode
+- (void)applyChangeset:(CKDataSourceChangeset *)changeset mode:(CKUpdateMode)mode
 {
     [self applyChangeset:changeset mode:mode cellConfiguration:nil];
 }
 
-- (void)updateConfiguration:(CKTransactionalComponentDataSourceConfiguration *)configuration
+- (void)updateConfiguration:(CKDataSourceConfiguration *)configuration
                        mode:(CKUpdateMode)mode
           cellConfiguration:(CKTableViewTransactionalDataSourceCellConfiguration *)cellConfiguration
 {
@@ -218,12 +220,12 @@ static NSString *const kReuseIdentifier = @"com.component_kit.table_view_data_so
 
 static void attachToCell(CKTableViewDataSourceCell *cell,
                          NSIndexPath *indexPath,
-                         CKTransactionalComponentDataSourceItem *item,
+                         CKDataSourceItem *item,
                          CKComponentDataSourceAttachController *attachController,
                          CKTableViewTransactionalDataSourceCellConfiguration *configuration,
-                         NSMapTable<UITableViewCell *, CKTransactionalComponentDataSourceItem *> *cellToItemMap)
+                         NSMapTable<UITableViewCell *, CKDataSourceItem *> *cellToItemMap)
 {
-  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView];
+  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView analyticsListener:nil];
   [cellToItemMap setObject:item forKey:cell];
   if (configuration.cellConfigurationFunction) {
     configuration.cellConfigurationFunction(cell, indexPath, item.model);
