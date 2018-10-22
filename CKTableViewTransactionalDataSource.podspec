@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.author           = { 'Leavez' => 'gaojiji@gmail.com' }
   s.source           = { :git => 'https://github.com/leavez/CKTableViewTransactionalDataSource.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '8.1'
   s.public_header_files = 'CKTableViewTransactionalDataSource/*.h'
   s.source_files = 'CKTableViewTransactionalDataSource/**/*.{h,m,mm,swift,c}'
   s.library = 'c++'
