@@ -163,7 +163,7 @@ static void applyChangesToTableView(
 
 - (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  return [_currentState objectAtIndexPath:indexPath].layout.size;
+  return [_currentState objectAtIndexPath:indexPath].rootLayout.size();
 }
 
 #pragma mark - Reload
@@ -225,8 +225,16 @@ static void attachToCell(CKTableViewDataSourceCell *cell,
                          CKTableViewTransactionalDataSourceCellConfiguration *configuration,
                          NSMapTable<UITableViewCell *, CKDataSourceItem *> *cellToItemMap)
 {
-  [attachController attachComponentLayout:item.layout withScopeIdentifier:item.scopeRoot.globalIdentifier withBoundsAnimation:item.boundsAnimation toView:cell.rootView analyticsListener:nil];
+  CKComponentDataSourceAttachControllerAttachComponentRootLayout(
+      attachController,
+      {.layoutProvider = item,
+       .scopeIdentifier = item.scopeRoot.globalIdentifier,
+       .boundsAnimation = item.boundsAnimation,
+       .view = cell.rootView,
+       .analyticsListener = item.scopeRoot.analyticsListener});
+
   [cellToItemMap setObject:item forKey:cell];
+    
   if (configuration.cellConfigurationFunction) {
     configuration.cellConfigurationFunction(cell, indexPath, item.model);
   }

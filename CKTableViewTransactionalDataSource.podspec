@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CKTableViewTransactionalDataSource'
-  s.version          = '0.2.1'
+  s.version          = '0.4.0'
   s.summary          = 'Tableview datasource for CompoenentKit'
 
   s.description      = <<-DESC
@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
   s.source_files = 'CKTableViewTransactionalDataSource/**/*.{h,m,mm,swift,c}'
   s.library = 'c++'
   s.pod_target_xcconfig = { 'CLANG_WARN_DOCUMENTATION_COMMENTS' => 'NO' }
-  s.dependency "ComponentKit", '~> 0.23'
+  s.dependency "ComponentKit", '~> 0.24'
 end
